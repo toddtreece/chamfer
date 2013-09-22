@@ -1,0 +1,29 @@
+{
+  "name": "UBDC Chamfer Calculator",
+  "version": "0.0.1",
+  "authors": [
+    "Todd Treece <toddtreece@gmail.com>"
+  ],
+  "description": "TODO",
+  "main": "index.html",
+  "keywords": [
+    "Union",
+    "Bridge",
+    "Drum",
+    "Company"
+  ],
+  "license": "GPL v3",
+  "homepage": "http://unionbridgedrums.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.0.0",
+    "paper": "~0.9.9"
+  }
+}
