@@ -5,8 +5,10 @@ A utility for determining rabbet sizes for hand planing stave chamfers using tec
 ## Installation
 
 This utility uses [bower](http://bower.io) to install dependencies. After installing bower, install the dependencies using the included package file.
-    cd chamfer
-    bower install
+````bash
+cd chamfer
+bower install
+````
 
 ## Contributing
 
