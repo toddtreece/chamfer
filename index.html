@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <style>#chamfer { height: 400px; }</style>
+  </head>
+
+  <body>
+
+    <div>
+      <input id="angle" type="text" pattern="\d+(\.\d{0,1})?" value="45" required><br>
+      <input id="thickness" type="text" pattern="\d+(\.\d{0,4})?" value="0.75" required>
+    </div>
+
+    <canvas id="chamfer"></canvas>
+
+    <!-- SCRIPTS -->
+    <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/paper/dist/paper.js"></script>
+    <script src="js/ruler.js"></script>
+    <script src="js/triangle.js"></script>
+    <script src="js/chamfer.js"></script>
+
+    <script>
+
+      $(document).ready(function() {
+
+        var chamfer = new UBDC.Chamfer();
+            chamfer.angle($('#angle').val());
+            chamfer.thickness($('#thickness').val());
+
+        var triangle = chamfer.solve();
+            triangle.canvas_size = $('#chamfer').height();
+            triangle.draw($('#chamfer').get(0));
+
+        $('#angle, #thickness').keyup(function(e) {
+
+          e.preventDefault();
+
+          chamfer.angle($('#angle').val());
+          chamfer.thickness($('#thickness').val());
+          triangle = chamfer.solve();
+          triangle.canvas_size = $('#chamfer').height();
+          triangle.draw($('#chamfer').get(0));
+
+        });
+
+      });
+
+    </script>
+
+  </body>
+
+</html>
