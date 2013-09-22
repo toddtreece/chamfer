@@ -1,10 +1,10 @@
 {
-  "name": "UBDC Chamfer Calculator",
+  "name": "The Union Bridge Drum Company Chamfer Calculator",
   "version": "0.0.1",
   "authors": [
     "Todd Treece <toddtreece@gmail.com>"
   ],
-  "description": "TODO",
+  "description": "A utility for determining rabbet sizes for hand planing stave chamfers using techniques based on ideas found in M.S. Bickford's Mouldings in Practice.",
   "main": "index.html",
   "keywords": [
     "Union",
