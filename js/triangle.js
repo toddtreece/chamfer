@@ -33,6 +33,7 @@ UBDC.Triangle = function() {
   this.ratio = 0;
   this.padding = 0;
   this.max = 0;
+  this.drawing = false;
 
   this.angle = {
     a: 0,
@@ -47,18 +48,28 @@ UBDC.Triangle = function() {
   };
 
   /** PUBLIC FUNCTIONS **/
-  this.draw = function(canvas) {
+  this.setup = function(canvas) {
 
     paper.setup(canvas);
+
+    this.drawing = new paper.Group();
+
+  };
+
+  this.draw = function() {
+
+    paper.view.viewSize = new paper.Size(this.canvas_size, this.canvas_size);
 
     this.ratio = this.side.b / this.side.a,
     this.padding = this.canvas_size * 0.10,
     this.max = this.canvas_size - (this.padding * 2);
 
+    this.drawing.removeChildren();
+
     this.drawTriangle();
-    this.drawDimensions();
     this.drawRabbet();
     this.drawPlane();
+    this.drawText();
 
     paper.view.draw();
 
@@ -82,28 +93,7 @@ UBDC.Triangle = function() {
 
     path.closed = true;
 
-  };
-
-  this.drawDimensions = function() {
-
-    var path = new paper.Path({
-      strokeColor: '#000000',
-      strokeWidth: 0.5,
-      dashArray: [3, 1]
-    });
-
-    path.add(
-      (this.canvas_size / 2) - ((this.ratio * this.max) / 2),
-      this.padding
-    );
-
-    path.lineBy(-(this.padding / 3), 0);
-    path.lineBy(0, this.max);
-    path.lineBy(this.padding / 3, 0);
-
-    path.lineBy(0, this.padding / 3);
-    path.lineBy(this.max * this.ratio, 0);
-    path.lineBy(0, -(this.padding / 3));
+    this.drawing.addChild(path);
 
   };
 
@@ -128,6 +118,8 @@ UBDC.Triangle = function() {
 
     path.closed = true;
 
+    this.drawing.addChild(path);
+
   };
 
   this.drawPlane = function() {
@@ -144,6 +136,74 @@ UBDC.Triangle = function() {
     );
 
     path.lineBy((this.max * this.ratio) * 1.5, this.max * 1.5);
+
+    this.drawing.addChild(path);
+
+  };
+
+  this.drawText = function() {
+
+    var ruler = new UBDC.Ruler();
+
+    /** SIDE A **/
+    var side_a = new paper.PointText({
+      point: [
+        (this.canvas_size / 2) - ((this.ratio * this.max) / 2) - (this.padding / 2),
+        (this.padding + (this.max / 2))
+      ],
+      justification: 'center',
+      content: ruler.toFraction(this.side.a) + '"',
+      fillColor: '#000000',
+      fontSize: this.max / 18
+    });
+
+    side_a.rotate(90);
+
+    this.drawing.addChild(side_a);
+
+    /** SIDE B **/
+    var side_b = new paper.PointText({
+      point: [
+        (this.canvas_size / 2),
+        this.padding + this.max + (this.padding / 2)
+      ],
+      justification: 'center',
+      content: ruler.toFraction(this.side.b) + '"',
+      fillColor: '#000000',
+      fontSize: this.max / 18
+    });
+
+    this.drawing.addChild(side_b);
+
+    /** RABBET HEIGHT **/
+    var rabbet_height = new paper.PointText({
+      point: [
+        (this.canvas_size / 2) + (this.padding / 5),
+        (this.padding + (this.max / 4))
+      ],
+      justification: 'center',
+      content: ruler.toFraction(this.side.a / 2) + '"',
+      fillColor: '#000000',
+      fontSize: this.max / 22
+    });
+
+    rabbet_height.rotate(90);
+
+    this.drawing.addChild(rabbet_height);
+
+    /** RABBET WIDTH **/
+    var rabbet_width = new paper.PointText({
+      point: [
+        (this.canvas_size / 2) +  ((this.ratio * this.max) / 4),
+        this.padding + (this.max / 2) - (this.padding / 10)
+      ],
+      justification: 'center',
+      content: ruler.toFraction(this.side.b / 2) + '"',
+      fillColor: '#000000',
+      fontSize: this.max / 22
+    });
+
+    this.drawing.addChild(rabbet_width);
 
   };
 

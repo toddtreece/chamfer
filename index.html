@@ -2,20 +2,58 @@
 <html>
 
   <head>
-    <style>#chamfer { height: 400px; }</style>
+    <title>UBDC Chamfer Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
 
-    <div>
-      <input id="angle" type="text" pattern="\d+(\.\d{0,1})?" value="45" required><br>
-      <input id="thickness" type="text" pattern="\d+(\.\d{0,4})?" value="0.75" required>
-    </div>
+    <div class="container">
 
-    <canvas id="chamfer"></canvas>
+      <div class="page-header">
+        <h1>UBDC Stave Chamfer Calculator</h1>
+        <p class="lead">
+          The Union Bridge Drum Company Stave Chamfer Calculator is a utility for determining rabbet sizes
+          for hand planing stave chamfers using techniques based on ideas found in M.S. Bickford's
+          <a href="http://www.lostartpress.com/Mouldings_in_Practice_p/bk-mip.htm" target="_blank">Mouldings in Practice</a>.
+        </p>
+        <p class="lead">
+          This a free and open source utility, and it functions best using the latest version of
+          <a href="https://www.google.com/chrome" target="_blank">Google Chrome</a> or
+          <a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.&nbsp;
+          If you would like to improve or make modifications to this utility, you
+          can fork the project on <a href="http://github.com/toddtreece/chamfer" target="_blank">GitHub</a>.
+        </p>
+      </div>
+
+      <div class="col-md-12">
+        <form class="form-inline text-center" role="form">
+          <div class="form-group col-md-3 col-md-offset-3">
+            <label class="control-label" for="angle">Bevel Angle</label>
+            <input class="form-control" id="angle" type="text" pattern="\d+(\.\d{0,1})?" value="45" required>
+          </div>
+          <div class="form-group col-md-3">
+            <label class="control-label" for="thickness">Thickness (in inches)</label>
+            <input class="form-control" id="thickness" type="text" pattern="\d+(\.\d{0,4})?" value="1" required>
+          </div>
+        </form>
+      </div>
+
+      <canvas id="chamfer" class="col-xs-12 col-s-8 col-s-offset-2 col-md-6 col-md-offset-3" style="margin-top: 20px;" resize></canvas>
+
+    </div>
 
     <!-- SCRIPTS -->
     <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/paper/dist/paper.js"></script>
     <script src="js/ruler.js"></script>
     <script src="js/triangle.js"></script>
@@ -25,23 +63,43 @@
 
       $(document).ready(function() {
 
+        // init
         var chamfer = new UBDC.Chamfer();
             chamfer.angle($('#angle').val());
             chamfer.thickness($('#thickness').val());
 
         var triangle = chamfer.solve();
-            triangle.canvas_size = $('#chamfer').height();
-            triangle.draw($('#chamfer').get(0));
+            triangle.canvas_size = $('#chamfer').width();
+            triangle.setup($('#chamfer').get(0));
+            triangle.draw();
 
+        // ignore form submissions
+        $('form').submit(function(e){ e.preventDefault(); });
+
+        // handle input changes
         $('#angle, #thickness').keyup(function(e) {
 
           e.preventDefault();
 
           chamfer.angle($('#angle').val());
           chamfer.thickness($('#thickness').val());
+
+          var group = triangle.drawing;
+
           triangle = chamfer.solve();
-          triangle.canvas_size = $('#chamfer').height();
-          triangle.draw($('#chamfer').get(0));
+          triangle.drawing = group;
+          triangle.canvas_size = $('#chamfer').width();
+          triangle.draw();
+
+        });
+
+        // handle window resizing
+        $(window).resize(function() {
+
+          var c = $('#chamfer');
+
+          triangle.canvas_size = c.width();
+          triangle.draw();
 
         });
 
