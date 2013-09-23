@@ -34,26 +34,46 @@
         </p>
       </div>
 
-      <div class="col-md-12">
-        <form class="form-inline text-center" role="form">
-          <div class="form-group col-md-2 col-md-offset-4">
-            <label class="control-label" for="angle">Bevel Angle</label>
-            <div class="input-group">
-              <input class="form-control" id="angle" type="text" pattern="\d+(\.\d{0,1})?" value="45" required>
-              <span class="input-group-addon">&deg;</span>
-            </div>
+      <div class="row">
+
+        <div class="col-md-6 col-md-offset-3">
+          <div id="error_message" class="alert alert-danger" style="display:none; margin-top: 20px;">
+            <strong>Error</strong> <span></span> <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
           </div>
-          <div class="form-group col-md-2">
-            <label class="control-label" for="thickness">Thickness</label>
-            <div class="input-group">
-              <input class="form-control" id="thickness" type="text" pattern="\d+(\.\d{0,4})?" value="0.75" required>
-              <span class="input-group-addon">in</span>
-            </div>
-          </div>
-        </form>
+        </div>
+
       </div>
 
-      <canvas id="chamfer" class="col-xs-12 col-s-8 col-s-offset-2 col-md-6 col-md-offset-3" style="margin-top: 20px;" resize></canvas>
+      <div class="row">
+
+        <div class="col-md-12">
+
+          <form class="form-inline text-center" role="form">
+            <div class="form-group col-md-2 col-md-offset-4">
+              <label class="control-label" for="angle">Bevel Angle</label>
+              <div class="input-group">
+                <input class="form-control" id="angle" type="text" pattern="\d+(\.\d{0,1})?" value="45" required>
+                <span class="input-group-addon">&deg;</span>
+              </div>
+            </div>
+
+            <div class="form-group col-md-2">
+              <label class="control-label" for="thickness">Thickness</label>
+              <div class="input-group">
+                <input class="form-control" id="thickness" type="text" pattern="\d+(\.\d{0,4})?" value="0.75" required>
+                <span class="input-group-addon">in</span>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+        <canvas id="chamfer" class="col-xs-12 col-s-8 col-s-offset-2 col-md-6 col-md-offset-3" style="margin-top: 20px;" resize></canvas>
+      </div>
 
     </div>
 
@@ -69,15 +89,22 @@
 
       $(document).ready(function() {
 
-        // init
-        var chamfer = new UBDC.Chamfer();
-            chamfer.angle($('#angle').val());
-            chamfer.thickness($('#thickness').val());
+        try {
 
-        var triangle = chamfer.solve();
-            triangle.canvas_size = $('#chamfer').width();
-            triangle.setup($('#chamfer').get(0));
-            triangle.draw();
+          // init
+          var chamfer = new UBDC.Chamfer();
+              chamfer.angle($('#angle').val());
+              chamfer.thickness($('#thickness').val());
+
+          var triangle = chamfer.solve();
+              triangle.canvas_size = $('#chamfer').width();
+              triangle.setup($('#chamfer').get(0));
+              triangle.draw();
+
+        } catch(e) {
+          $('#error_message span').html(e);
+          $('#error_message').show().delay(800).fadeOut(400);
+        }
 
         // ignore form submissions
         $('form').submit(function(e){ e.preventDefault(); });
@@ -87,15 +114,20 @@
 
           e.preventDefault();
 
-          chamfer.angle($('#angle').val());
-          chamfer.thickness($('#thickness').val());
+          try {
+            chamfer.angle($('#angle').val());
+            chamfer.thickness($('#thickness').val());
 
-          var group = triangle.drawing;
+            var group = triangle.drawing;
 
-          triangle = chamfer.solve();
-          triangle.drawing = group;
-          triangle.canvas_size = $('#chamfer').width();
-          triangle.draw();
+            triangle = chamfer.solve();
+            triangle.drawing = group;
+            triangle.canvas_size = $('#chamfer').width();
+            triangle.draw();
+          } catch(e) {
+            $('#error_message span').html(e);
+            $('#error_message').show().delay(1500).fadeOut(500);
+          }
 
         });
 
