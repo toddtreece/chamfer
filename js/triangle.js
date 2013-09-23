@@ -66,8 +66,8 @@ UBDC.Triangle = function() {
 
     this.drawing.removeChildren();
 
-    this.drawTriangle();
     this.drawRabbet();
+    this.drawTriangle();
     this.drawPlane();
     this.drawText();
 
@@ -80,7 +80,7 @@ UBDC.Triangle = function() {
     var path = new paper.Path({
       strokeColor: '#000000',
       fillColor: '#D2D1A7',
-      strokeWidth: 2
+      strokeWidth: 1
     });
 
     path.add(
