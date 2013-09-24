@@ -29,7 +29,7 @@ var UBDC =  UBDC || {};
 UBDC.Ruler = function() {
 
   /** PUBLIC VARIABLES **/
-  this.base = 32;
+  this.base = 64;
 
   /** PUBLIC FUNCTIONS **/
   this.toFraction = function(inches) {
