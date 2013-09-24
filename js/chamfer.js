@@ -61,7 +61,7 @@ UBDC.Chamfer = function() {
       throw "Invalid angle number";
 
     if(input_angle > 45 || input_angle <= 0)
-      throw "You must provide a bevel angle between 90 and 0";
+      throw "You must provide a bevel angle between 45&deg; and 0&deg;";
 
     bevel_angle = input_angle;
 
